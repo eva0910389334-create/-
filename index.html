@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>宅家壯遊記：螢幕光影中的萬物旅行 | Virtual Horizons</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Tailwind Configuration -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            peach: {
+              50: '#FFF9F5',
+              100: '#FFEEDD',
+              200: '#FFD7B5',
+              400: '#FF8A65',
+              500: '#FF6B4A',
+              600: '#E64A19',
+            },
+            ice: {
+              50: '#F0FBFD',
+              100: '#E0F7FA',
+              200: '#B2EBF2',
+              500: '#00BCD4',
+              700: '#00838F',
+            },
+            cream: {
+              100: '#FFFDF9',
+              200: '#FFF5E6',
+            },
+            slateDark: '#121621',
+            cardDark: '#1E2638',
+            borderDark: '#2D3748'
+          },
+          fontFamily: {
+            sans: ['Inter', 'PingFang TC', 'Microsoft JhengHei', 'sans-serif'],
+          },
+          boxShadow: {
+            'cute': '0 10px 25px -5px rgba(255, 138, 101, 0.25), 0 8px 10px -6px rgba(255, 138, 101, 0.1)',
+            'stamp': '0 4px 15px rgba(0, 0, 0, 0.15)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Custom CSS for strict image ratios & cute animations -->
+  <style>
+    /* Strict Image Aspect Ratio 16:9 enforce */
+    .travel-img {
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      width: 100%;
+      border-radius: 16px;
+    }
+
+    /* Stamp animation keyframes */
+    @keyframes stampBounce {
+      0% { transform: scale(3) rotate(-15deg); opacity: 0; }
+      50% { transform: scale(0.9) rotate(-3deg); opacity: 0.9; }
+      75% { transform: scale(1.05) rotate(-5deg); opacity: 1; }
+      100% { transform: scale(1) rotate(-5deg); opacity: 1; }
+    }
+
+    .animate-stamp {
+      animation: stampBounce 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
+    /* Air conditioner breeze pulse animation */
+    @keyframes breezeFlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .breeze-bg {
+      background: linear-gradient(-45deg, #e0f7fa, #b2ebf2, #e8f5e9, #fff9f5);
+      background-size: 400% 400%;
+      animation: breezeFlow 8s ease infinite;
+    }
+
+    .dark .breeze-bg {
+      background: linear-gradient(-45deg, #121621, #1e2638, #182232, #0d1117);
+      background-size: 400% 400%;
+      animation: breezeFlow 8s ease infinite;
+    }
+
+    /* Stamp Ticket Pattern Border */
+    .ticket-edge {
+      background-image: radial-gradient(circle at 0 50%, transparent 10px, currentColor 11px);
+    }
+  </style>
+</head>
+
+<body class="bg-peach-50 text-slate-800 dark:bg-slateDark dark:text-slate-100 transition-colors duration-500 font-sans min-h-screen flex flex-col selection:bg-peach-400 selection:text-white">
+
+  <!-- Floating Navigation Header -->
+  <header class="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-white/80 dark:bg-slateDark/80 border-b border-peach-100 dark:border-slate-700 transition-colors duration-300">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+      
+      <!-- Brand Logo / Passport Badge -->
+      <a href="#" class="flex items-center gap-2 group">
+        <div class="w-10 h-10 rounded-full bg-peach-400 text-white flex items-center justify-center font-bold shadow-md transform group-hover:rotate-12 transition-transform duration-300 text-xl">
+          ✈️
+        </div>
+        <div>
+          <span class="font-extrabold text-lg text-peach-600 dark:text-peach-400 block leading-none">宅家壯遊記</span>
+          <span class="text-[10px] tracking-widest text-slate-400 uppercase font-semibold">Virtual Horizons</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <nav class="hidden md:flex items-center gap-1 bg-peach-50 dark:bg-cardDark px-3 py-1.5 rounded-full border border-peach-200 dark:border-slate-700 text-xs font-medium">
+        <a href="#chapter1" class="px-3 py-1 rounded-full hover:bg-peach-200 dark:hover:bg-slate-700 transition-all">起飛大廳</a>
+        <a href="#chapter2" class="px-3 py-1 rounded-full hover:bg-peach-200 dark:hover:bg-slate-700 transition-all">異世界冒險</a>
+        <a href="#chapter3" class="px-3 py-1 rounded-full hover:bg-peach-200 dark:hover:bg-slate-700 transition-all">城市夜讀</a>
+        <a href="#chapter4" class="px-3 py-1 rounded-full hover:bg-peach-200 dark:hover:bg-slate-700 transition-all">靈魂登陸</a>
+      </nav>
+
+      <!-- Action Buttons (Audio & Theme Switcher) -->
+      <div class="flex items-center gap-2">
+        <!-- Ambient Sound Generator Toggle -->
+        <button id="soundToggleBtn" onclick="toggleAmbientSound()" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-full bg-ice-100 dark:bg-slate-700 text-ice-700 dark:text-ice-200 hover:bg-ice-200 transition-all border border-ice-200 dark:border-slate-600 shadow-sm" title="開啟/關閉夏日涼霜環境音 (Web Audio API)">
+          <span id="soundIcon">🔇</span>
+          <span id="soundText" class="hidden sm:inline">夏日風聲</span>
+        </button>
+
+        <!-- Day / Night Theme Toggle -->
+        <button onclick="toggleTheme()" class="p-2 rounded-full bg-peach-100 dark:bg-slate-700 text-peach-600 dark:text-peach-200 hover:bg-peach-200 transition-all border border-peach-200 dark:border-slate-600" title="切換日景/夜幕主題">
+          <span class="dark:hidden">☀️ 涼爽日景</span>
+          <span class="hidden dark:inline">🌙 夜幕影院</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Scroll / Flight Progress Bar -->
+    <div class="w-full bg-peach-100 dark:bg-slate-800 h-1">
+      <div id="flightProgressBar" class="bg-gradient-to-r from-peach-400 via-ice-500 to-peach-500 h-1 w-0 transition-all duration-150"></div>
+    </div>
+  </header>
+
+  <!-- Hero Section: Virtual Flight Boarding Pass -->
+  <section class="pt-28 pb-16 px-4 breeze-bg relative overflow-hidden flex items-center justify-center min-h-[85vh]">
+    <!-- Decorative background stickers -->
+    <div class="absolute top-12 left-10 opacity-20 pointer-events-none select-none text-6xl">🌴</div>
+    <div class="absolute bottom-12 right-10 opacity-20 pointer-events-none select-none text-7xl">📺</div>
+    <div class="absolute top-1/3 right-1/4 opacity-15 pointer-events-none select-none text-8xl">🎬</div>
+
+    <div class="max-w-4xl w-full mx-auto relative z-10">
+      
+      <!-- Virtual Boarding Pass Card -->
+      <div class="bg-white dark:bg-cardDark rounded-3xl p-6 sm:p-10 shadow-cute border-2 border-peach-200 dark:border-slate-700 relative overflow-hidden">
+        
+        <!-- Top Stamp Header -->
+        <div class="flex flex-wrap items-center justify-between gap-4 border-b-2 border-dashed border-peach-200 dark:border-slate-700 pb-6">
+          <div class="flex items-center gap-3">
+            <span class="px-3 py-1 bg-peach-400 text-white rounded-full text-xs font-bold uppercase tracking-wider">BOARDING PASS</span>
+            <span class="text-xs font-mono text-slate-400">FLIGHT #SOUL-2026</span>
+          </div>
+          <div class="flex items-center gap-2 text-xs font-semibold text-peach-600 dark:text-peach-400 bg-peach-50 dark:bg-slate-800 px-3 py-1 rounded-lg">
+            <span>目的地：心靈深處千山萬水</span>
+          </div>
+        </div>
+
+        <!-- Main Hero Title -->
+        <div class="my-8 text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div class="space-y-3">
+            <h1 class="text-3xl sm:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
+              宅家壯遊記
+              <span class="block text-xl sm:text-2xl font-bold text-peach-500 dark:text-peach-400 mt-2">
+                螢幕光影中的萬物旅行
+              </span>
+            </h1>
+            <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-xl">
+              「肉體雖然停留在家中沙發，靈魂卻已在萬千世界中跋涉過千山萬水。」在這個熾熱的暑假，透過光影交錯的螢幕，展開一場無遠弗屆的心靈壯遊。
+            </p>
+          </div>
+
+          <!-- Plane & Seat Info Badge -->
+          <div class="flex-shrink-0 bg-peach-50 dark:bg-slate-800 p-4 rounded-2xl border border-peach-100 dark:border-slate-700 text-center w-full sm:w-auto">
+            <div class="text-3xl mb-1">🛋️</div>
+            <div class="text-xs text-slate-400 uppercase font-mono">SEAT NUMBER</div>
+            <div class="text-lg font-bold text-slate-800 dark:text-slate-100">SOFA-01 (冷氣特等艙)</div>
+          </div>
+        </div>
+
+        <!-- Ticket Details Footer -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 bg-peach-50/60 dark:bg-slate-800/50 p-4 rounded-2xl border border-peach-100 dark:border-slate-700/50 text-xs font-mono mb-6">
+          <div>
+            <span class="text-slate-400 block">PASSENGER</span>
+            <span class="font-bold text-slate-700 dark:text-slate-200">靈魂旅人 Soul Traveler</span>
+          </div>
+          <div>
+            <span class="text-slate-400 block">GATE</span>
+            <span class="font-bold text-slate-700 dark:text-slate-200">SCREEN-01</span>
+          </div>
+          <div>
+            <span class="text-slate-400 block">DEPARTURE</span>
+            <span class="font-bold text-slate-700 dark:text-slate-200">26°C 酷夏涼爽房</span>
+          </div>
+          <div>
+            <span class="text-slate-400 block">CLASS</span>
+            <span class="font-bold text-peach-500">IMMERSIVE VISION</span>
+          </div>
+        </div>
+
+        <!-- CTA Launch Button -->
+        <div class="text-center">
+          <a href="#chapter1" class="inline-flex items-center gap-2 px-8 py-3.5 bg-gradient-to-r from-peach-400 to-peach-500 hover:from-peach-500 hover:to-peach-600 text-white font-bold rounded-full shadow-lg transform hover:-translate-y-0.5 active:translate-y-0 transition-all text-sm">
+            <span>開始心靈之旅</span>
+            <span class="text-lg">🛫</span>
+          </a>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Main Content Container -->
+  <main class="max-w-4xl mx-auto px-4 py-12 space-y-20">
+
+    <!-- CHAPTER 1 -->
+    <section id="chapter1" class="scroll-mt-24">
+      <div class="bg-white dark:bg-cardDark rounded-3xl p-6 sm:p-8 shadow-sm border border-peach-100 dark:border-slate-700 space-y-6">
+        
+        <!-- Chapter Header Badge -->
+        <div class="flex items-center gap-3">
+          <span class="w-8 h-8 rounded-full bg-ice-500 text-white flex items-center justify-center font-bold text-sm">01</span>
+          <span class="text-xs font-bold tracking-widest text-ice-700 dark:text-ice-200 uppercase bg-ice-100 dark:bg-slate-700 px-3 py-1 rounded-full">CHAPTER 1 • THE AC SANCTUARY</span>
+        </div>
+
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
+          炎夏的起飛大廳：冷氣房與螢幕門戶
+        </h2>
+
+        <!-- Paragraph Content -->
+        <p class="text-slate-600 dark:text-slate-300 leading-relaxed text-base sm:text-lg">
+          窗外的蟬鳴嘶啞地宣告著盛夏的炎熱，熾烈的陽光將柏油路烤得發燙。這個暑假，我沒有踏上遠方的旅途，也沒有參與熱鬧的營隊；我選擇將自己安放在冷氣房的沙發上，透過一方螢幕，展開一場無遠弗屆的心靈壯遊。
+        </p>
+
+        <!-- Photo Embed 1 (Mandatory exact image src & 16:9 styling) -->
+        <div class="relative group overflow-hidden rounded-2xl shadow-md">
+          <img src="image_generation_content/15307536862521690554" alt="夏日涼爽房間與螢幕" class="travel-img">
+          <div class="absolute bottom-3 right-3 bg-black/60 backdrop-blur-md text-white text-xs px-3 py-1.5 rounded-full flex items-center gap-1.5">
+            <span>📷 航程起點：涼爽冷氣房與觀景窗</span>
+          </div>
+        </div>
+
+        <!-- Interactive Widget 1: Air Conditioner Remote Controller -->
+        <div class="bg-ice-50 dark:bg-slate-800/80 rounded-2xl p-5 border border-ice-200 dark:border-slate-700 space-y-4">
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">❄️</span>
+              <h3 class="font-bold text-sm sm:text-base text-slate-800 dark:text-slate-100">虛擬客廳空調控制器</h3>
+            </div>
+            <span class="text-xs text-slate-500 dark:text-slate-400">點擊切換舒適觀影環境</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
+            <button onclick="setTemp(24)" id="tempBtn24" class="temp-btn px-4 py-3 rounded-xl bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 hover:border-ice-500 transition-all font-semibold text-xs text-slate-700 dark:text-slate-200">
+              🧊 極爽 24°C<br><span class="text-[10px] text-slate-400 font-normal">極致避暑模式</span>
+            </button>
+            <button onclick="setTemp(26)" id="tempBtn26" class="temp-btn px-4 py-3 rounded-xl bg-ice-500 text-white font-semibold text-xs border border-ice-500 transition-all shadow-sm">
+              🍃 黃金 26°C<br><span class="text-[10px] text-white/80 font-normal">最佳觀影沉浸溫感</span>
+            </button>
+            <button onclick="setTemp(28)" id="tempBtn28" class="temp-btn px-4 py-3 rounded-xl bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 hover:border-ice-500 transition-all font-semibold text-xs text-slate-700 dark:text-slate-200">
+              🌤️ 自然 28°C<br><span class="text-[10px] text-slate-400 font-normal">微風愜意省電模式</span>
+            </button>
+          </div>
+
+          <!-- Remote Display Indicator -->
+          <div id="tempStatusDisplay" class="text-xs text-center font-mono text-ice-700 dark:text-ice-200 bg-white/80 dark:bg-slate-900/50 p-2.5 rounded-lg border border-ice-100 dark:border-slate-700">
+            當前設定：26°C 黃金溫感 | 風速：自動 | 蟬鳴隔絕率：99%
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CHAPTER 2 -->
+    <section id="chapter2" class="scroll-mt-24">
+      <div class="bg-white dark:bg-cardDark rounded-3xl p-6 sm:p-8 shadow-sm border border-peach-100 dark:border-slate-700 space-y-6">
+        
+        <!-- Chapter Header Badge -->
+        <div class="flex items-center gap-3">
+          <span class="w-8 h-8 rounded-full bg-peach-400 text-white flex items-center justify-center font-bold text-sm">02</span>
+          <span class="text-xs font-bold tracking-widest text-peach-600 dark:text-peach-400 uppercase bg-peach-50 dark:bg-slate-700 px-3 py-1 rounded-full">CHAPTER 2 • UNWAVERING CONVICTION</span>
+        </div>
+
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
+          異世界信念冒險：千軍萬馬中的不屈勇氣
+        </h2>
+
+        <!-- Paragraph Content -->
+        <p class="text-slate-600 dark:text-slate-300 leading-relaxed text-base sm:text-lg">
+          多數人或許認為，待在家中追劇不過是消磨光陰的娛樂，但我卻在那些跌宕起伏的劇情裡，看見了千萬種人生的縮影。在一部熱血的日本動畫中，主角即使面對千軍萬馬，依然緊握信念、不屈不撓。那份對夢想的執著，深深震撼了我。回想起自己在課業上遭遇挫折便輕易言棄的軟弱，主角的汗水與淚水宛如一記警鐘，敲醒了我沉睡的鬥志。
+        </p>
+
+        <!-- Photo Embed 2 (Mandatory exact image src & 16:9 styling) -->
+        <div class="relative group overflow-hidden rounded-2xl shadow-md">
+          <img src="image_generation_content/13862649403599973042" alt="日系熱血動漫場景" class="travel-img">
+          <div class="absolute bottom-3 right-3 bg-black/60 backdrop-blur-md text-white text-xs px-3 py-1.5 rounded-full flex items-center gap-1.5">
+            <span>⚔️ 異世界景點：燃燒信念的光影戰場</span>
+          </div>
+        </div>
+
+        <!-- Interactive Widget 2: Courage Meter & Quote Unlocker -->
+        <div class="bg-peach-50 dark:bg-slate-800/80 rounded-2xl p-5 border border-peach-200 dark:border-slate-700 space-y-4">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">🔥</span>
+              <h3 class="font-bold text-sm sm:text-base text-slate-800 dark:text-slate-100">熱血信念勇氣值注入計</h3>
+            </div>
+            <span id="courageVal" class="text-sm font-mono font-bold text-peach-500">50%</span>
+          </div>
+
+          <!-- Slider -->
+          <input type="range" id="courageSlider" min="0" max="100" value="50" oninput="updateCourage(this.value)" class="w-full accent-peach-500 cursor-pointer">
+
+          <!-- Dynamic Quote Card Display -->
+          <div id="courageQuoteCard" class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-peach-200 dark:border-slate-700 text-center transition-all duration-300">
+            <p class="text-sm font-bold text-peach-600 dark:text-peach-400">
+              「汗水與淚水，是敲醒軟弱鬥志的最美警鐘。」
+            </p>
+            <p class="text-xs text-slate-400 mt-1">—— 解鎖信念金句 50%</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CHAPTER 3 -->
+    <section id="chapter3" class="scroll-mt-24">
+      <div class="bg-white dark:bg-cardDark rounded-3xl p-6 sm:p-8 shadow-sm border border-peach-100 dark:border-slate-700 space-y-6">
+        
+        <!-- Chapter Header Badge -->
+        <div class="flex items-center gap-3">
+          <span class="w-8 h-8 rounded-full bg-indigo-500 text-white flex items-center justify-center font-bold text-sm">03</span>
+          <span class="text-xs font-bold tracking-widest text-indigo-600 dark:text-indigo-300 uppercase bg-indigo-50 dark:bg-slate-700 px-3 py-1 rounded-full">CHAPTER 3 • HUMAN EMPATHY & CITY NIGHTS</span>
+        </div>
+
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
+          城市角落與同理心：人性微光中的理解
+        </h2>
+
+        <!-- Paragraph Content -->
+        <p class="text-slate-600 dark:text-slate-300 leading-relaxed text-base sm:text-lg">
+          此外，一部探討人性的優質台劇，則帶我走進了社會的幽暗角落。劇中人物在道德與生存間的掙扎，讓我明白世間並非非黑即白。這不僅拓寬了我的視野，更培養了我對他人的同理心。原來，不出門，依然能知天下事；不見客，依然能懂人情冷暖。
+        </p>
+
+        <!-- Photo Embed 3 (Mandatory exact image src & 16:9 styling) -->
+        <div class="relative group overflow-hidden rounded-2xl shadow-md">
+          <img src="image_generation_content/8422584135609779494" alt="台劇質感夜景" class="travel-img">
+          <div class="absolute bottom-3 right-3 bg-black/60 backdrop-blur-md text-white text-xs px-3 py-1.5 rounded-full flex items-center gap-1.5">
+            <span>🏙️ 城市景點：夜幕街燈下的故事角落</span>
+          </div>
+        </div>
+
+        <!-- Interactive Widget 3: Empathy Compass Flipper -->
+        <div class="bg-indigo-50/50 dark:bg-slate-800/80 rounded-2xl p-5 border border-indigo-100 dark:border-slate-700 space-y-4">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">🧭</span>
+              <h3 class="font-bold text-sm sm:text-base text-slate-800 dark:text-slate-100">同理心視角切換羅盤</h3>
+            </div>
+            <span class="text-xs text-indigo-500 font-medium">點擊探索多維人性</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div onclick="switchPerspective(1)" id="persp1" class="persp-card cursor-pointer p-4 rounded-xl bg-white dark:bg-slate-700 border-2 border-indigo-400 dark:border-indigo-500 shadow-sm transition-all hover:scale-[1.02]">
+              <div class="text-xs font-bold text-indigo-600 dark:text-indigo-300">視角 A：生存抉擇</div>
+              <p class="text-xs text-slate-500 dark:text-slate-300 mt-1">體會現實壓迫下的苦衷與無奈。</p>
+            </div>
+
+            <div onclick="switchPerspective(2)" id="persp2" class="persp-card cursor-pointer p-4 rounded-xl bg-white dark:bg-slate-700 border-2 border-transparent hover:border-indigo-300 opacity-70 transition-all hover:scale-[1.02]">
+              <div class="text-xs font-bold text-indigo-600 dark:text-indigo-300">視角 B：道德界線</div>
+              <p class="text-xs text-slate-500 dark:text-slate-300 mt-1">明白世事非黑即白，多一份包容。</p>
+            </div>
+
+            <div onclick="switchPerspective(3)" id="persp3" class="persp-card cursor-pointer p-4 rounded-xl bg-white dark:bg-slate-700 border-2 border-transparent hover:border-indigo-300 opacity-70 transition-all hover:scale-[1.02]">
+              <div class="text-xs font-bold text-indigo-600 dark:text-indigo-300">視角 C：溫度連結</div>
+              <p class="text-xs text-slate-500 dark:text-slate-300 mt-1">不出門知天下事，不見客懂人情。</p>
+            </div>
+          </div>
+
+          <div id="perspDetail" class="text-xs text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-900 p-3.5 rounded-lg border border-indigo-100 dark:border-slate-700">
+            💡 <span class="font-bold">生存抉擇視角感悟：</span>「理解每一個人在風浪中的艱難選擇，就是同理心的起點。」
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CHAPTER 4 -->
+    <section id="chapter4" class="scroll-mt-24">
+      <div class="bg-white dark:bg-cardDark rounded-3xl p-6 sm:p-8 shadow-sm border border-peach-100 dark:border-slate-700 space-y-6">
+        
+        <!-- Chapter Header Badge -->
+        <div class="flex items-center gap-3">
+          <span class="w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold text-sm">04</span>
+          <span class="text-xs font-bold tracking-widest text-emerald-700 dark:text-emerald-300 uppercase bg-emerald-50 dark:bg-slate-700 px-3 py-1 rounded-full">CHAPTER 4 • SOUL LANDING & GROWTH</span>
+        </div>
+
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
+          靈魂的登陸與歸途：真實成長的回憶印記
+        </h2>
+
+        <!-- Paragraph Content -->
+        <p class="text-slate-600 dark:text-slate-300 leading-relaxed text-base sm:text-lg">
+          隨著暑假步入尾聲，螢幕里的跑馬燈亮起，故事也畫下了句點。然而，那些主角們傳遞給我的勇氣、悲憫與智慧，卻早已悄悄融入我的血液。這個暑假，我的肉體雖然停留在家中，靈魂卻已在萬千世界中跋涉過千山萬水。這份在虛擬故事中獲得的真實成長，便是我今夏最難忘、也最珍貴的回憶。
+        </p>
+
+        <!-- Photo Embed 4 (Mandatory exact image src & 16:9 styling) -->
+        <div class="relative group overflow-hidden rounded-2xl shadow-md">
+          <img src="image_generation_content/9760754118457949063" alt="壯麗靈魂壯遊風景" class="travel-img">
+          <div class="absolute bottom-3 right-3 bg-black/60 backdrop-blur-md text-white text-xs px-3 py-1.5 rounded-full flex items-center gap-1.5">
+            <span>🌅 終點景點：靈魂歸途的壯麗夕陽</span>
+          </div>
+        </div>
+
+        <!-- Interactive Widget 4: Travel Passport Stamp Book -->
+        <div class="bg-emerald-50/60 dark:bg-slate-800/80 rounded-2xl p-6 border border-emerald-200 dark:border-slate-700 space-y-6">
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <div>
+              <h3 class="font-bold text-base text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                <span>🛂</span>
+                <span>心靈壯遊紀念護照蓋章處</span>
+              </h3>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">點擊按鈕，解鎖並蓋上今夏 4 大心靈景點紀念章！</p>
+            </div>
+            <span id="stampCountBadge" class="text-xs font-mono font-bold bg-emerald-500 text-white px-3 py-1 rounded-full shadow-sm">
+              已集章：0 / 4
+            </span>
+          </div>
+
+          <!-- Stamp Collection Grid -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            
+            <!-- Stamp 1 -->
+            <div id="stampBox1" onclick="collectStamp(1)" class="cursor-pointer group relative bg-white dark:bg-slate-700 rounded-2xl p-4 border-2 border-dashed border-emerald-300 dark:border-slate-600 text-center flex flex-col items-center justify-center min-h-[120px] transition-all hover:bg-emerald-50 dark:hover:bg-slate-600">
+              <span id="stampIcon1" class="text-2xl text-slate-300 dark:text-slate-500 group-hover:scale-110 transition-transform">🛋️</span>
+              <span class="text-xs font-bold text-slate-600 dark:text-slate-200 mt-2">涼爽避暑章</span>
+              <span class="text-[10px] text-slate-400 mt-0.5">點擊蓋章</span>
+              <!-- Applied Stamp Mark -->
+              <div id="stampMark1" class="hidden absolute inset-0 flex items-center justify-center bg-peach-500/10 dark:bg-peach-500/20 rounded-2xl border-2 border-peach-500 text-peach-600 dark:text-peach-400 font-extrabold rotate-[-8deg] animate-stamp shadow-stamp">
+                <div class="text-center p-1 border-2 border-peach-500 rounded-lg">
+                  <div class="text-xs font-mono">APPROVED</div>
+                  <div class="text-[10px]">26°C COOL</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Stamp 2 -->
+            <div id="stampBox2" onclick="collectStamp(2)" class="cursor-pointer group relative bg-white dark:bg-slate-700 rounded-2xl p-4 border-2 border-dashed border-emerald-300 dark:border-slate-600 text-center flex flex-col items-center justify-center min-h-[120px] transition-all hover:bg-emerald-50 dark:hover:bg-slate-600">
+              <span id="stampIcon2" class="text-2xl text-slate-300 dark:text-slate-500 group-hover:scale-110 transition-transform">⚔️</span>
+              <span class="text-xs font-bold text-slate-600 dark:text-slate-200 mt-2">熱血信念章</span>
+              <span class="text-[10px] text-slate-400 mt-0.5">點擊蓋章</span>
+              <!-- Applied Stamp Mark -->
+              <div id="stampMark2" class="hidden absolute inset-0 flex items-center justify-center bg-emerald-500/10 dark:bg-emerald-500/20 rounded-2xl border-2 border-emerald-500 text-emerald-600 dark:text-emerald-400 font-extrabold rotate-[-5deg] animate-stamp shadow-stamp">
+                <div class="text-center p-1 border-2 border-emerald-500 rounded-lg">
+                  <div class="text-xs font-mono">COURAGE</div>
+                  <div class="text-[10px]">UNSTOPPABLE</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Stamp 3 -->
+            <div id="stampBox3" onclick="collectStamp(3)" class="cursor-pointer group relative bg-white dark:bg-slate-700 rounded-2xl p-4 border-2 border-dashed border-emerald-300 dark:border-slate-600 text-center flex flex-col items-center justify-center min-h-[120px] transition-all hover:bg-emerald-50 dark:hover:bg-slate-600">
+              <span id="stampIcon3" class="text-2xl text-slate-300 dark:text-slate-500 group-hover:scale-110 transition-transform">🏙️</span>
+              <span class="text-xs font-bold text-slate-600 dark:text-slate-200 mt-2">人情同理章</span>
+              <span class="text-[10px] text-slate-400 mt-0.5">點擊蓋章</span>
+              <!-- Applied Stamp Mark -->
+              <div id="stampMark3" class="hidden absolute inset-0 flex items-center justify-center bg-indigo-500/10 dark:bg-indigo-500/20 rounded-2xl border-2 border-indigo-500 text-indigo-600 dark:text-indigo-400 font-extrabold rotate-[6deg] animate-stamp shadow-stamp">
+                <div class="text-center p-1 border-2 border-indigo-500 rounded-lg">
+                  <div class="text-xs font-mono">EMPATHY</div>
+                  <div class="text-[10px]">CONNECTED</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Stamp 4 -->
+            <div id="stampBox4" onclick="collectStamp(4)" class="cursor-pointer group relative bg-white dark:bg-slate-700 rounded-2xl p-4 border-2 border-dashed border-emerald-300 dark:border-slate-600 text-center flex flex-col items-center justify-center min-h-[120px] transition-all hover:bg-emerald-50 dark:hover:bg-slate-600">
+              <span id="stampIcon4" class="text-2xl text-slate-300 dark:text-slate-500 group-hover:scale-110 transition-transform">🌟</span>
+              <span class="text-xs font-bold text-slate-600 dark:text-slate-200 mt-2">靈魂成長章</span>
+              <span class="text-[10px] text-slate-400 mt-0.5">點擊蓋章</span>
+              <!-- Applied Stamp Mark -->
+              <div id="stampMark4" class="hidden absolute inset-0 flex items-center justify-center bg-amber-500/10 dark:bg-amber-500/20 rounded-2xl border-2 border-amber-500 text-amber-600 dark:text-amber-400 font-extrabold rotate-[-4deg] animate-stamp shadow-stamp">
+                <div class="text-center p-1 border-2 border-amber-500 rounded-lg">
+                  <div class="text-xs font-mono">SOUL EXP</div>
+                  <div class="text-[10px]">100% GROWN</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Certificate Popup Box when all 4 collected -->
+          <div id="certificateCard" class="hidden bg-gradient-to-r from-peach-400 to-peach-500 text-white rounded-2xl p-6 text-center space-y-3 shadow-lg">
+            <div class="text-3xl">🎉 恭喜完成【宅家心靈壯遊】航程！</div>
+            <p class="text-sm font-medium opacity-90 max-w-lg mx-auto">
+              你已集齊所有心靈印記！這個暑假，我們在虛擬故事中獲得了真實成長。願這份勇氣、悲憫與智慧，伴隨你踏上未來的每一段旅程。
+            </p>
+            <div class="pt-2">
+              <button onclick="shareJourney()" class="px-5 py-2 bg-white text-peach-600 font-bold rounded-full text-xs shadow hover:bg-peach-50 transition-all">
+                複製壯遊紀念心得 📋
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white dark:bg-cardDark border-t border-peach-100 dark:border-slate-800 py-10 mt-20 text-center text-xs text-slate-400">
+    <div class="max-w-4xl mx-auto px-4 space-y-3">
+      <div class="flex items-center justify-center gap-2 text-peach-500 font-bold text-sm">
+        <span>✈️</span>
+        <span>宅家壯遊記：螢幕光影中的萬物旅行</span>
+      </div>
+      <p>攝影指導 & 前端工程團隊 聯名製作 • 今夏最難忘的回憶</p>
+      <p class="text-[11px] text-slate-400">© 2026 Virtual Horizons Single-Page Travel Blog. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Message Toast Banner for Clipboard Copy / Notifications -->
+  <div id="toast" class="fixed bottom-6 right-6 bg-slate-900 text-white px-4 py-3 rounded-2xl text-xs font-medium shadow-2xl opacity-0 translate-y-4 pointer-events-none transition-all duration-300 z-50 flex items-center gap-2">
+    <span id="toastIcon">✨</span>
+    <span id="toastMsg">提示訊息</span>
+  </div>
+
+  <!-- JavaScript Interaction Logic -->
+  <script>
+    // 1. Theme Switcher Toggle (Day / Night Mode)
+    function toggleTheme() {
+      const htmlEl = document.documentElement;
+      if (htmlEl.classList.contains('dark')) {
+        htmlEl.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+        showToast('☀️ 已切換至「涼爽日景」主題', '🌿');
+      } else {
+        htmlEl.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+        showToast('🌙 已切換至「夜幕影院」主題', '🎬');
+      }
+    }
+
+    // Load saved theme
+    if (localStorage.getItem('theme') === 'dark') {
+      document.documentElement.classList.add('dark');
+    }
+
+    // 2. Flight Scroll Progress Bar
+    window.addEventListener('scroll', () => {
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      document.getElementById('flightProgressBar').style.width = scrolled + '%';
+    });
+
+    // 3. Web Audio API Ambient Sound Generator (Summer Breeze & Cicadas)
+    let audioCtx = null;
+    let isSoundPlaying = false;
+    let breezeNode = null;
+    let gainNode = null;
+
+    function toggleAmbientSound() {
+      const icon = document.getElementById('soundIcon');
+      const text = document.getElementById('soundText');
+
+      if (!isSoundPlaying) {
+        startAmbientAudio();
+        isSoundPlaying = true;
+        icon.innerText = '🔊';
+        text.innerText = '播放中';
+        showToast('🔊 已開啟夏日微風與涼爽聲效', '🍃');
+      } else {
+        stopAmbientAudio();
+        isSoundPlaying = false;
+        icon.innerText = '🔇';
+        text.innerText = '夏日風聲';
+        showToast('🔇 已關閉環境聲音效', '❄️');
+      }
+    }
+
+    function startAmbientAudio() {
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!audioCtx) {
+          audioCtx = new AudioContext();
+        } else if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+
+        // Create pink noise for soft wind breeze
+        const bufferSize = audioCtx.sampleRate * 2;
+        const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const output = noiseBuffer.getChannelData(0);
+        let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+
+        for (let i = 0; i < bufferSize; i++) {
+          let white = Math.random() * 2 - 1;
+          b0 = 0.99886 * b0 + white * 0.0555179;
+          b1 = 0.99332 * b1 + white * 0.0750759;
+          b2 = 0.96900 * b2 + white * 0.1538520;
+          b3 = 0.86650 * b3 + white * 0.3104856;
+          b4 = 0.55000 * b4 + white * 0.5329522;
+          b5 = -0.7616 * b5 - white * 0.0168980;
+          output[i] = b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362;
+          output[i] *= 0.03; // keep soft volume
+          b6 = white * 0.115926;
+        }
+
+        breezeNode = audioCtx.createBufferSource();
+        breezeNode.buffer = noiseBuffer;
+        breezeNode.loop = true;
+
+        gainNode = audioCtx.createGain();
+        gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
+
+        // Lowpass filter for smooth air-conditioner breeze sound
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(400, audioCtx.currentTime);
+
+        breezeNode.connect(filter);
+        filter.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+
+        breezeNode.start();
+      } catch (e) {
+        console.log('Audio init failed:', e);
+      }
+    }
+
+    function stopAmbientAudio() {
+      if (breezeNode) {
+        try {
+          breezeNode.stop();
+        } catch(e) {}
+      }
+    }
+
+    // Play subtle click sound on interaction
+    function playBeep(freq = 600, duration = 0.08) {
+      if (!audioCtx) return;
+      try {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch(e){}
+    }
+
+    // 4. Remote Control Temperature Logic
+    function setTemp(temp) {
+      playBeep(800, 0.05);
+      const btn24 = document.getElementById('tempBtn24');
+      const btn26 = document.getElementById('tempBtn26');
+      const btn28 = document.getElementById('tempBtn28');
+      const display = document.getElementById('tempStatusDisplay');
+
+      // Reset style
+      [btn24, btn26, btn28].forEach(btn => {
+        btn.className = "temp-btn px-4 py-3 rounded-xl bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 hover:border-ice-500 transition-all font-semibold text-xs text-slate-700 dark:text-slate-200";
+      });
+
+      const activeBtn = temp === 24 ? btn24 : (temp === 26 ? btn26 : btn28);
+      activeBtn.className = "temp-btn px-4 py-3 rounded-xl bg-ice-500 text-white font-semibold text-xs border border-ice-500 transition-all shadow-sm";
+
+      if (temp === 24) {
+        display.innerHTML = '當前設定：24°C 極爽模式 | 風速：強勁 | 瞬間驅散夏日酷暑！';
+      } else if (temp === 26) {
+        display.innerHTML = '當前設定：26°C 黃金溫感 | 風速：自動 | 蟬鳴隔絕率：99%';
+      } else {
+        display.innerHTML = '當前設定：28°C 自然微風 | 風速：柔和 | 溫馨愜意光影環境';
+      }
+    }
+
+    // 5. Courage Slider Logic
+    function updateCourage(val) {
+      document.getElementById('courageVal').innerText = val + '%';
+      const card = document.getElementById('courageQuoteCard');
+
+      if (val < 30) {
+        card.innerHTML = `
+          <p class="text-sm font-bold text-slate-600 dark:text-slate-300">
+            「面對千軍萬馬，內心曾有過輕易言棄的軟弱……」
+          </p>
+          <p class="text-xs text-slate-400 mt-1">—— 蓄勢待發 30%</p>
+        `;
+      } else if (val < 70) {
+        card.innerHTML = `
+          <p class="text-sm font-bold text-peach-600 dark:text-peach-400">
+            「汗水與淚水，是敲醒軟弱鬥志的最美警鐘。」
+          </p>
+          <p class="text-xs text-slate-400 mt-1">—— 解鎖信念金句 50%</p>
+        `;
+      } else {
+        card.innerHTML = `
+          <p class="text-sm font-bold text-peach-600 dark:text-peach-400">
+            「緊握信念、不屈不撓！將每一次挫折化為前行的勇氣力量！」
+          </p>
+          <p class="text-xs text-amber-500 font-bold mt-1">🔥 勇氣信念爆表 100%！全速前行！</p>
+        `;
+      }
+    }
+
+    // 6. Empathy Compass Card Switcher
+    function switchPerspective(index) {
+      playBeep(500, 0.06);
+      const cards = [document.getElementById('persp1'), document.getElementById('persp2'), document.getElementById('persp3')];
+      const detail = document.getElementById('perspDetail');
+
+      cards.forEach((c, i) => {
+        if (i === index - 1) {
+          c.className = "persp-card cursor-pointer p-4 rounded-xl bg-white dark:bg-slate-700 border-2 border-indigo-400 dark:border-indigo-500 shadow-sm transition-all hover:scale-[1.02]";
+        } else {
+          c.className = "persp-card cursor-pointer p-4 rounded-xl bg-white dark:bg-slate-700 border-2 border-transparent hover:border-indigo-300 opacity-70 transition-all hover:scale-[1.02]";
+        }
+      });
+
+      if (index === 1) {
+        detail.innerHTML = `💡 <span class="font-bold">生存抉擇視角感悟：</span>「理解每一個人在風浪中的艱難選擇，就是同理心的起點。」`;
+      } else if (index === 2) {
+        detail.innerHTML = `💡 <span class="font-bold">道德界線視角感悟：</span>「世間並非非黑即白，走進社會幽暗角落，學會更多包容與體諒。」`;
+      } else {
+        detail.innerHTML = `💡 <span class="font-bold">溫度連結視角感悟：</span>「不出門知天下事，不見客懂人情冷暖。光影連結起我們與世界的橋樑。」`;
+      }
+    }
+
+    // 7. Travel Stamp Collector Logic
+    let collectedStamps = new Set();
+
+    function collectStamp(id) {
+      playBeep(300, 0.15); // Stamp sound
+      
+      const mark = document.getElementById('stampMark' + id);
+      if (mark.classList.contains('hidden')) {
+        mark.classList.remove('hidden');
+        collectedStamps.add(id);
+        
+        // Update badge
+        document.getElementById('stampCountBadge').innerText = `已集章：${collectedStamps.size} / 4`;
+        
+        showToast(`🎉 成功蓋上第 ${id} 枚心靈紀念章！`, '🛂');
+
+        // Check completion
+        if (collectedStamps.size === 4) {
+          setTimeout(() => {
+            document.getElementById('certificateCard').classList.remove('hidden');
+            playBeep(900, 0.3);
+            showToast('🎓 恭喜完成心靈壯遊全集章！證書已解鎖！', '🌟');
+          }, 400);
+        }
+      }
+    }
+
+    // 8. Clipboard Share functionality
+    function shareJourney() {
+      const summaryText = `【宅家壯遊記：螢幕光影中的萬物旅行】\n今夏最美好的回憶：肉體雖然停留在家中，靈魂卻已在萬千世界中跋涉過千山萬水！✨`;
+      
+      // Fallback copy using execCommand
+      const dummy = document.createElement("textarea");
+      document.body.appendChild(dummy);
+      dummy.value = summaryText;
+      dummy.select();
+      document.execCommand("copy");
+      document.body.removeChild(dummy);
+
+      showToast('📋 已複製壯遊心得摘要至剪貼簿！', '✨');
+    }
+
+    // Toast Notification helper
+    function showToast(msg, icon = '✨') {
+      const toast = document.getElementById('toast');
+      document.getElementById('toastMsg').innerText = msg;
+      document.getElementById('toastIcon').innerText = icon;
+
+      toast.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
+      toast.classList.add('opacity-100', 'translate-y-0');
+
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none');
+        toast.classList.remove('opacity-100', 'translate-y-0');
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
